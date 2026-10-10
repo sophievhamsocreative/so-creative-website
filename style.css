@@ -640,3 +640,8 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 .pijl-wit{color:var(--wit);align-self:center}
 .pijl-mid{align-self:center}
 .bg-blauw .cp-uitgever{color:var(--tekst-zacht);font-weight:600}
+/* Touch: zelf swipen door fotorij en logobalken (JS laat ze ook vanzelf lopen) */
+.swipe{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.swipe::-webkit-scrollbar{display:none}
+.swipe .feed-rij,.swipe .marquee{animation:none}
+.swipe.feed{background:linear-gradient(transparent 38%,var(--blauw) 38%)}.swipe.feed::before{display:none}
