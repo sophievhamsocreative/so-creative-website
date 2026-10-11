@@ -645,3 +645,6 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 .swipe::-webkit-scrollbar{display:none}
 .swipe .feed-rij,.swipe .marquee{animation:none}
 .swipe.feed{background:linear-gradient(transparent 38%,var(--blauw) 38%)}.swipe.feed::before{display:none}
+/* Platformicoontjes bij de volgers op creatorpagina's */
+.cp-cijfers span{display:flex;align-items:center;gap:8px}
+.cp-cijfers span svg.cp-pf{grid-column:auto;grid-row:auto;align-self:center;width:18px;height:18px;flex:none;fill:var(--burgundy);stroke:none}
