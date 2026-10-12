@@ -67,28 +67,48 @@ window.addEventListener('load', function () {
   });
 });
 
-// Handgeschreven "rewrite" (pen-animatie via een SVG-masker)
-// Safari (iPhone/Mac) tekent bewegende maskers niet goed bij: de letters blijven
-// half of rommelig staan. Daarom: in Safari de letters direct netjes tonen met
-// een korte fade, en in andere browsers na afloop van de animatie het masker
-// weghalen zodat het eindresultaat altijd scherp en compleet is.
+// Handgeschreven "rewrite" (pen-animatie)
+// De pennenstreken stonden in een SVG-masker; Safari (iPhone) ververst bewegende
+// maskers niet, waardoor het woord rommelig verscheen. Nu tekenen we de streken
+// zelf zichtbaar en knippen ze bij met een vaste clipPath in de vorm van de
+// letters. Dat werkt in alle browsers. Na afloop komen de echte letters terug,
+// zodat het eindbeeld altijd scherp is.
 (function () {
-  var ua = navigator.userAgent;
-  var safari = /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|OPR|Android/.test(ua);
-  document.querySelectorAll('svg.pen').forEach(function (svg) {
+  var NS = 'http://www.w3.org/2000/svg';
+  document.querySelectorAll('svg.pen').forEach(function (svg, n) {
     var letters = svg.querySelector('g[mask]');
-    var streken = svg.querySelectorAll('.pen-streken path');
-    if (!letters) return;
-    function klaar() { letters.removeAttribute('mask'); }
-    if (safari) {
-      klaar();
-      svg.classList.add('pen-fade');
-      return;
+    var streken = svg.querySelector('.pen-streken');
+    var defs = svg.querySelector('defs');
+    if (!letters || !streken || !defs) return;
+
+    var clip = document.createElementNS(NS, 'clipPath');
+    clip.setAttribute('id', 'pen-clip-' + n);
+    clip.setAttribute('clipPathUnits', 'userSpaceOnUse');
+    letters.querySelectorAll('path').forEach(function (p) { clip.appendChild(p.cloneNode(true)); });
+    defs.appendChild(clip);
+
+    var lijnen = streken.querySelectorAll('path');
+    lijnen.forEach(function (p) {
+      var l = p.getTotalLength ? p.getTotalLength() : 0;
+      if (!l) return;
+      p.removeAttribute('pathLength');
+      p.style.strokeDasharray = l + ' ' + l;
+      p.style.strokeDashoffset = l;
+    });
+    streken.setAttribute('stroke', 'currentColor');
+    streken.setAttribute('clip-path', 'url(#pen-clip-' + n + ')');
+    svg.appendChild(streken);              // uit het masker, gewoon zichtbaar
+    letters.removeAttribute('mask');
+    letters.style.opacity = '0';
+
+    function klaar() {
+      letters.style.opacity = '';
+      streken.style.display = 'none';
     }
-    var nog = streken.length;
-    streken.forEach(function (p) {
+    var nog = lijnen.length;
+    lijnen.forEach(function (p) {
       p.addEventListener('animationend', function () { if (--nog <= 0) klaar(); });
     });
-    setTimeout(klaar, 6000); // vangnet
+    setTimeout(klaar, 8000); // vangnet
   });
 })();
