@@ -67,15 +67,28 @@ window.addEventListener('load', function () {
   });
 });
 
-// Handgeschreven "rewrite": lengtes van de pennenstreken echt meten.
-// Safari (iPhone) negeert pathLength="1" in een masker, waardoor de letters
-// half of in stippels verschijnen. Met gemeten lengtes werkt het overal gelijk.
+// Handgeschreven "rewrite" (pen-animatie via een SVG-masker)
+// Safari (iPhone/Mac) tekent bewegende maskers niet goed bij: de letters blijven
+// half of rommelig staan. Daarom: in Safari de letters direct netjes tonen met
+// een korte fade, en in andere browsers na afloop van de animatie het masker
+// weghalen zodat het eindresultaat altijd scherp en compleet is.
 (function () {
-  document.querySelectorAll('.pen-streken path').forEach(function (p) {
-    var l = p.getTotalLength ? p.getTotalLength() : 0;
-    if (!l) return;
-    p.removeAttribute('pathLength');
-    p.style.strokeDasharray = l + ' ' + l;
-    p.style.strokeDashoffset = l;
+  var ua = navigator.userAgent;
+  var safari = /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|OPR|Android/.test(ua);
+  document.querySelectorAll('svg.pen').forEach(function (svg) {
+    var letters = svg.querySelector('g[mask]');
+    var streken = svg.querySelectorAll('.pen-streken path');
+    if (!letters) return;
+    function klaar() { letters.removeAttribute('mask'); }
+    if (safari) {
+      klaar();
+      svg.classList.add('pen-fade');
+      return;
+    }
+    var nog = streken.length;
+    streken.forEach(function (p) {
+      p.addEventListener('animationend', function () { if (--nog <= 0) klaar(); });
+    });
+    setTimeout(klaar, 6000); // vangnet
   });
 })();
