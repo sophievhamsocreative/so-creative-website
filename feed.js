@@ -11,11 +11,10 @@
 var INDELING = 'speels';
 
 var FEED = [
-  'assets/images/feed/team.jpg',
   'assets/images/feed/salsa-shop.jpg',
   'assets/images/feed/koen-boek.jpg',
-  'assets/images/feed/trio.jpg',
   'assets/images/feed/koen-podium.jpg',
+  'assets/images/feed/trio.jpg',
   'assets/images/feed/boeklancering.jpg',
   'assets/images/feed/event-duo.jpg',
   'assets/images/feed/malcom-event.jpg'

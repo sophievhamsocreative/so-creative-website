@@ -66,3 +66,16 @@ window.addEventListener('load', function () {
     requestAnimationFrame(stap);
   });
 });
+
+// Handgeschreven "rewrite": lengtes van de pennenstreken echt meten.
+// Safari (iPhone) negeert pathLength="1" in een masker, waardoor de letters
+// half of in stippels verschijnen. Met gemeten lengtes werkt het overal gelijk.
+(function () {
+  document.querySelectorAll('.pen-streken path').forEach(function (p) {
+    var l = p.getTotalLength ? p.getTotalLength() : 0;
+    if (!l) return;
+    p.removeAttribute('pathLength');
+    p.style.strokeDasharray = l + ' ' + l;
+    p.style.strokeDashoffset = l;
+  });
+})();
