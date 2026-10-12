@@ -71,8 +71,8 @@ window.addEventListener('load', function () {
 // De pennenstreken stonden in een SVG-masker; Safari (iPhone) ververst bewegende
 // maskers niet, waardoor het woord rommelig verscheen. Nu tekenen we de streken
 // zelf zichtbaar en knippen ze bij met een vaste clipPath in de vorm van de
-// letters. Dat werkt in alle browsers. Na afloop komen de echte letters terug,
-// zodat het eindbeeld altijd scherp is.
+// letters. Na afloop komen de echte letters terug, zodat het eindbeeld scherp is.
+// Op iPhone/Safari bleef ook dat haperen; daar verschijnt het woord letter voor letter.
 (function () {
   var NS = 'http://www.w3.org/2000/svg';
   document.querySelectorAll('svg.pen').forEach(function (svg, n) {
@@ -80,6 +80,21 @@ window.addEventListener('load', function () {
     var streken = svg.querySelector('.pen-streken');
     var defs = svg.querySelector('defs');
     if (!letters || !streken || !defs) return;
+
+    // iPhone/Safari: letter voor letter laten verschijnen (geen masker of clipPath nodig)
+    var ua = navigator.userAgent;
+    if (/AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|OPR|Android/.test(ua)) {
+      letters.removeAttribute('mask');
+      streken.parentNode.removeChild(streken);
+      letters.querySelectorAll('path').forEach(function (p, i) {
+        var g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', 'pen-letter');
+        g.style.animationDelay = (0.4 + i * 0.13) + 's';
+        p.parentNode.insertBefore(g, p);
+        g.appendChild(p);
+      });
+      return;
+    }
 
     var clip = document.createElementNS(NS, 'clipPath');
     clip.setAttribute('id', 'pen-clip-' + n);

@@ -655,3 +655,6 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 /* Duo-logo's (bijv. Odido × TeamNL) passen altijd binnen de kaart */
 .collab-duo{max-width:100%}
 .collab-duo img{height:auto;max-height:26px;min-width:0;max-width:calc(50% - 14px)}
+.pen-letter{transform-box:fill-box;transform-origin:50% 85%;opacity:0;animation:pen-letter .38s cubic-bezier(.2,.9,.3,1.25) forwards}
+@keyframes pen-letter{from{opacity:0;transform:translateY(14%) scale(.55) rotate(-8deg)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pen-letter{animation:none;opacity:1}}
