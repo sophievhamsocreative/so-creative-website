@@ -1,6 +1,6 @@
 /* ==========================================================================
    So Creative Management — gedeelde stylesheet voor alle pagina's
-   Huisstijl: burgundy #771138 · blauw #d4eaf5 · wit #ffffff
+   Huisstijl: burgundy #771138 · blauw #d4eaf5 · offwhite #fbf9f6
    Fonts: Poppins (alles) · DM Serif Display (alleen logo)
    ========================================================================== */
 
@@ -10,7 +10,7 @@
   --burgundy-soft:#f3dbe4;
   --blauw:#d4eaf5;
   --blauw-licht:#eef6fb;
-  --wit:#ffffff;
+  --wit:#fbf9f6;
   --tekst:#771138;
   --tekst-zacht:#7d4a5c;
   --lijn:rgba(119,17,56,.14);
@@ -60,7 +60,7 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 .pijl-link:hover{opacity:.7}
 
 /* ---------- Header ---------- */
-.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--lijn)}
+.site-header{position:sticky;top:0;z-index:50;background:rgba(251,249,246,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--lijn)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:var(--header-h)}
 .logo{font-family:"DM Serif Display",Georgia,serif;text-transform:uppercase;text-decoration:none;font-size:1.08rem;line-height:1;letter-spacing:.02em;display:inline-block}
 .logo img{display:block;height:34px;width:auto}
