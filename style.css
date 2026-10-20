@@ -698,3 +698,5 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 /* Over-pagina: collage met één foto */
 .over-collage:has(img:only-child){grid-template-columns:1fr}
 .over-collage img:only-child{aspect-ratio:4/3;object-position:center 35%;rotate:2deg;translate:0 0}
+/* "En meer"-logobalk op creatorpagina's: meer ruimte tussen de merken */
+.merken-klein .marquee{gap:84px;padding-right:84px;animation-duration:60s}
