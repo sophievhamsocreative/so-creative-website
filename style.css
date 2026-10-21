@@ -700,3 +700,9 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 .over-collage img:only-child{aspect-ratio:4/3;object-position:center 35%;rotate:2deg;translate:0 0}
 /* "En meer"-logobalk op creatorpagina's: meer ruimte tussen de merken */
 .merken-klein .marquee{gap:84px;padding-right:84px;animation-duration:60s}
+/* Fotorij en logobalken ook op laptop zelf te scrollen/slepen */
+.swipe{cursor:grab}
+.swipe.sleept{cursor:grabbing;user-select:none}
+.swipe img{-webkit-user-drag:none}
+.swipe.feed{padding-top:36px;margin-top:28px}
+@media (max-width:620px){.swipe.feed{margin-top:8px}}

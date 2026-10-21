@@ -34,9 +34,9 @@ document.querySelectorAll('[data-jaar]').forEach(function (el) {
   window.addEventListener('pageshow', naarBoven);
 })();
 
-// Op telefoons (touch): fotorij en logobalken zelf kunnen swipen, en daarna weer vanzelf verder lopen
+// Fotorij en logobalken: zelf kunnen scrollen (telefoon: swipen; laptop: trackpad, shift+scrollwiel
+// of slepen met de muis) en daarna weer vanzelf verder lopen
 window.addEventListener('load', function () {
-  if (!window.matchMedia('(hover: none)').matches) return;
   var stil = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var paren = [];
   document.querySelectorAll('.feed').forEach(function (b) { var r = b.querySelector('.feed-rij'); if (r) paren.push([b, r, 30]); });
@@ -44,22 +44,55 @@ window.addEventListener('load', function () {
   paren.forEach(function (p) {
     var bak = p[0], rij = p[1], snelheid = p[2];
     bak.classList.add('swipe');
-    var pos = 0, wacht = 0, aanraken = false, vorige = null;
-    bak.addEventListener('touchstart', function () { aanraken = true; }, { passive: true });
-    bak.addEventListener('touchend', function () { aanraken = false; wacht = 2500; }, { passive: true });
-    bak.addEventListener('scroll', function () { if (aanraken || wacht > 0) pos = bak.scrollLeft; }, { passive: true });
+    var pos = 0, wacht = 0, bezig = false, boven = false, vorige = null;
+    // lengte van één ronde = waar de eerste kopie begint (de inhoud staat er meerdere keren in)
+    function ronde() {
+      var kids = rij.children, eerste = kids[0], i, k;
+      function x(el) { if (getComputedStyle(el).display === 'contents') el = el.firstElementChild; return el ? el.offsetLeft - eerste.offsetLeft : 0; }
+      for (i = 1; i < kids.length; i++) { k = kids[i]; if (k.getAttribute('aria-hidden') === 'true') return x(k); }
+      for (i = 1; i < kids.length; i++) { k = kids[i]; if (k.getAttribute('alt') === '') return x(k); }
+      return rij.scrollWidth / 2;
+    }
+    function los() { bezig = false; wacht = 2500; }
+    // telefoon
+    bak.addEventListener('touchstart', function () { bezig = true; }, { passive: true });
+    bak.addEventListener('touchend', los, { passive: true });
+    // laptop: muis erboven = pauze, trackpad/shift+scroll = zelf scrollen
+    bak.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') boven = true; });
+    bak.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { boven = false; if (!bezig) wacht = 1200; } });
+    bak.addEventListener('wheel', function (e) { if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) wacht = 2500; }, { passive: true });
+    // laptop: slepen met de muis
+    var sleepX = null, sleepStart = 0, gesleept = false;
+    bak.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      sleepX = e.clientX; sleepStart = bak.scrollLeft; gesleept = false; bezig = true;
+      bak.classList.add('sleept');
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (sleepX === null) return;
+      var dx = e.clientX - sleepX;
+      if (Math.abs(dx) > 4) gesleept = true;
+      bak.scrollLeft = sleepStart - dx; pos = bak.scrollLeft;
+    });
+    window.addEventListener('pointerup', function () {
+      if (sleepX === null) return;
+      sleepX = null; bak.classList.remove('sleept'); los();
+    });
+    bak.addEventListener('click', function (e) { if (gesleept) { e.preventDefault(); e.stopPropagation(); gesleept = false; } }, true);
+    bak.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    bak.addEventListener('scroll', function () { if (bezig || boven || wacht > 0) pos = bak.scrollLeft; }, { passive: true });
     function stap(t) {
       var dt = vorige === null ? 0 : Math.min(t - vorige, 100); vorige = t;
-      var helft = rij.scrollWidth / 2;
-      if (wacht > 0) wacht -= dt;
-      if (!aanraken && wacht <= 0 && !stil && !bak.classList.contains('gepauzeerd')) {
+      var helft = ronde();
+      if (wacht > 0 && !boven) wacht -= dt;
+      if (!bezig && !boven && wacht <= 0 && !stil && !bak.classList.contains('gepauzeerd')) {
         pos += snelheid * dt / 1000;
         bak.scrollLeft = pos;
       }
-      // eindeloos rondlopen: de inhoud staat er twee keer in
-      if (helft > 0 && !aanraken) {
-        if (bak.scrollLeft >= helft) { bak.scrollLeft -= helft; pos = bak.scrollLeft; }
-        else if (bak.scrollLeft <= 0 && wacht > 0) { bak.scrollLeft += helft; pos = bak.scrollLeft; }
+      // eindeloos rondlopen
+      if (helft > 0 && sleepX === null) {
+        if (bak.scrollLeft >= helft) { bak.scrollLeft -= helft; pos = bak.scrollLeft; if (sleepX !== null) sleepStart -= helft; }
+        else if (bak.scrollLeft <= 0 && (wacht > 0 || boven || bezig)) { bak.scrollLeft += helft; pos = bak.scrollLeft; }
       }
       requestAnimationFrame(stap);
     }
