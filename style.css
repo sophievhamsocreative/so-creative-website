@@ -706,3 +706,5 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 .swipe img{-webkit-user-drag:none}
 .swipe.feed{padding-top:36px;margin-top:28px}
 @media (max-width:620px){.swipe.feed{margin-top:8px}}
+/* Kopje boven de logobalk blijft staan tijdens het scrollen */
+.swipe .merken-label{position:sticky;left:0}
