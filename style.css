@@ -13,6 +13,7 @@
   --wit:#fbf9f6;
   --tekst:#771138;
   --tekst-zacht:#7d4a5c;
+  --tekst-hero:#453036;   /* alleen de alinea onder de hoofdboodschap: donkerder, zie 5.3 */
   --lijn:rgba(119,17,56,.14);
   --radius:22px;
   --max:1240px;
@@ -84,7 +85,7 @@ h3{font-size:1.05rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom
 .hero{padding:76px 0 0;text-align:center;overflow:hidden;position:relative}
 .hero h1{font-size:clamp(2.5rem,6.4vw,5.6rem);max-width:1100px;margin:0 auto}
 .hero h1 em{font-family:"Gochi Hand",cursive;font-weight:400;font-style:normal;text-transform:none;letter-spacing:0;font-size:1.12em;line-height:.7;display:inline-block;rotate:-4deg;translate:0 .06em;margin-right:.08em}
-.hero .lead{margin:22px auto 30px}
+.hero .lead{margin:22px auto 30px;color:var(--tekst-hero)}
 .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
 .hero .hero-ctas{justify-content:center}
 .creator-kaart .foto img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;border-radius:var(--radius)}
