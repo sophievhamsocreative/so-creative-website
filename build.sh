@@ -16,6 +16,7 @@ for f in *; do
     sophie.jpg|sophie-koen.jpg) cp "$f" $I/team/ ;;
     boeklancering.jpg|camera.jpg|duo.jpg|event-duo.jpg|koen-boek.jpg|koen-podium.jpg|malcom-event.jpg|salsa-shop.jpg|stoel.jpg|team-bank.jpg|team.jpg|trio.jpg|zw.jpg) cp "$f" $I/feed/ ;;
     koen*.jpg|koen-boek-cover.png|ongetemd-spel.png|malcom*.jpg|podcast.jpg) cp "$f" $I/creators/ ;;
+    favicon*|apple-touch-icon.png) cp "$f" $D/ ;;
     *.png|*.svg) cp "$f" $I/logos/ ;;
   esac
 done
